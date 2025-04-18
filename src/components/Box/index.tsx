@@ -12,11 +12,3 @@ const Box: React.FC<PropsWithChildren> = ({ children, ...rest }) => {
 }
 
 export default Box
-
-export const Box2: React.FC<PropsWithChildren> = ({ children, ...rest }) => {
-  return (
-    <div className={styles.box} {...rest}>
-      {children}
-    </div>
-  )
-}

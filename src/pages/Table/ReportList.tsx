@@ -3,14 +3,8 @@ import React, { useEffect, useState } from 'react'
 import Spinner from '@/components/Spinner'
 
 import styles from './DocList.module.css'
+import Table from '@/components/Table/Table'
 interface Props {}
-
-const columns = [
-  {
-    header: 'Creative Name',
-    accessorKey: 'creative_name',
-  },
-]
 
 const ReportsList: React.FC<Props> = () => {
   const [reportsList, setReportsList] = useState<ReportsList>([])
@@ -27,11 +21,12 @@ const ReportsList: React.FC<Props> = () => {
         {reportsList?.length === 0 ? (
           <Spinner />
         ) : (
-          reportsList?.map((r, i) => (
-            <a key={i} className={styles.button} target="_blank">
-              {r.creative_name}
-            </a>
-          ))
+          // reportsList?.map((r, i) => (
+          //   <a key={i} className={styles.button} target="_blank">
+          //     {r.creative_name}
+          //   </a>
+          // ))
+          <Table data={reportsList} />
         )}
       </section>
     </>
