@@ -25,4 +25,19 @@ declare interface Report {
   installs: number
 }
 
+// end card elements removal
+declare interface tags {
+  concept: string
+  atype: string
+  alanguage: string
+  cta: string
+  objects: string[]
+  ctalanguage: string
+  logopresent: string
+  cta_placement: string
+  bgcolor: string
+  bgsetting: string
+  ctabgcolor: string
+}
+
 declare type ReportsList = Report[]

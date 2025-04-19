@@ -6,7 +6,7 @@ import Notfound from './pages/Notfound'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/index',
     element: (
       <Layout>
         <Index />
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/table',
+    path: '/',
     element: (
       <Layout>
         <Index />
