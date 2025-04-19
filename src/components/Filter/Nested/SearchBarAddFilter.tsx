@@ -21,14 +21,11 @@ const SearchBarAddFilter: React.FC<Props> = () => {
   }
 
   const DimensionsList: { id: number; lable: string }[] = [
-    { id: 1, lable: 'Select all' },
-    { id: 2, lable: 'Width' },
-    { id: 3, lable: 'Height' },
-    { id: 4, lable: 'Size' },
-    { id: 5, lable: 'Aspect Ratio' },
-    { id: 6, lable: 'File Size' },
-    { id: 7, lable: 'File Type' },
-    { id: 8, lable: 'File Name' },
+    { id: 1, lable: 'Country' },
+    { id: 2, lable: 'ad_network' },
+    { id: 3, lable: 'os' },
+    { id: 4, lable: 'campaign' },
+    { id: 5, lable: 'ad_group' },
   ]
 
   const TagsList: { id: number; lable: string }[] = [
@@ -51,6 +48,15 @@ const SearchBarAddFilter: React.FC<Props> = () => {
     { id: 4, lable: 'Ghost' },
     { id: 5, lable: 'Egg' },
   ]
+
+  const metricsList: { id: number; lable: string }[] = [
+    { id: 1, lable: 'IPM' },
+    { id: 2, lable: 'CTR' },
+    { id: 3, lable: 'SPEND' },
+    { id: 4, lable: 'Clicks' },
+    { id: 5, lable: 'CPM' },
+  ]
+
   return (
     <>
       <div className="pt-2">
