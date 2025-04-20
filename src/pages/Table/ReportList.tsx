@@ -6,12 +6,34 @@ import styles from './DocList.module.css'
 import Table from '@/components/Table/Table'
 import Filter from '@/components/Filter/Filter'
 import { Data } from '@/Data/Data'
+import { Store, useStore } from '@tanstack/react-store'
 interface Props {}
+
+export const numberOfFiltersAppliedStore = new Store({
+  numberOfFiltersApplied: 0,
+})
+
+export const handleSetNumberOfFiltersApplied = () => {
+  numberOfFiltersAppliedStore.setState((prev) => ({
+    numberOfFiltersApplied: prev.numberOfFiltersApplied + 1,
+  }))
+}
+
+export const handleRemoveNumberOfFiltersApplied = () => {
+  numberOfFiltersAppliedStore.setState((prev) => ({
+    numberOfFiltersApplied: prev.numberOfFiltersApplied - 1,
+  }))
+}
+
+export const handleResetNumberOfFiltersApplied = () => {
+  numberOfFiltersAppliedStore.setState(() => ({
+    numberOfFiltersApplied: 0,
+  }))
+}
 
 const ReportsList: React.FC<Props> = () => {
   const [reportsList, setReportsList] = useState<ReportsList>([])
-  const [numberOfFiltersApplied, setNumberOfFiltersApplied] =
-    useState<number>(0)
+  const { numberOfFiltersApplied } = useStore(numberOfFiltersAppliedStore)
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -28,9 +50,7 @@ const ReportsList: React.FC<Props> = () => {
       <Filter
         showFilter={reportsList?.length > 0}
         numberOfFiltersApplied={numberOfFiltersApplied}
-        setNumberOfFiltersApplied={(value: number) =>
-          setNumberOfFiltersApplied(value)
-        }
+        setNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
       />
       <br />
       {reportsList?.length === 0 ? <Spinner /> : <Table data={reportsList} />}

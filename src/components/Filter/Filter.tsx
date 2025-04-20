@@ -5,8 +5,8 @@ import AddFilter from './AddFilter'
 
 interface Props {
   showFilter: boolean
-  numberOfFiltersApplied?: number
-  setNumberOfFiltersApplied?: (value: number) => void
+  numberOfFiltersApplied: number
+  setNumberOfFiltersApplied: () => void
 }
 
 const Filter: React.FC<Props> = ({ showFilter, numberOfFiltersApplied }) => {
