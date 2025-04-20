@@ -165,12 +165,12 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                     setSelectedTagList(
                       selectedTagList.filter((item) => item.id !== tag.id),
                     )
-                    handleSetNumberOfFiltersApplied()
+                    handleRemoveNumberOfFiltersApplied()
                   } else {
                     setSelectedTagList([...selectedTagList, tag])
-                    handleRemoveNumberOfFiltersApplied()
+                    handleSetNumberOfFiltersApplied()
                   }
-                  setShowOnlySelectTagFromTagList(!showOnlySelectTagFromTagList) // show only selected tag
+                  setShowOnlySelectTagFromTagList(true)
                 }}
                 key={tag.id}
                 className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
@@ -277,22 +277,20 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                 ))}
               </div>
               <div>
-                {numberOfFiltersApplied > 0 && (
-                  <Button
-                    variant="contained"
-                    color="inherit"
-                    className="bg-gray-900 text-white rounded-xl mt-2 w-full"
-                    sx={{
-                      backgroundColor: '#000000',
-                      color: '#FFFFFF',
-                    }}
-                    onClick={() => {
-                      setShowOnlySelectTagFromTagList(false)
-                    }}
-                  >
-                    Apply <KeyboardReturnIcon />
-                  </Button>
-                )}
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  className="bg-gray-900 text-white rounded-xl mt-2 w-full"
+                  sx={{
+                    backgroundColor: '#000000',
+                    color: '#FFFFFF',
+                  }}
+                  onClick={() => {
+                    setShowOnlySelectTagFromTagList(false)
+                  }}
+                >
+                  Apply <KeyboardReturnIcon />
+                </Button>
               </div>
             </div>
           )}
@@ -311,14 +309,12 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                           (item) => item.id !== metric.id,
                         ),
                       )
-                      handleSetNumberOfFiltersApplied()
+                      handleRemoveNumberOfFiltersApplied()
                     } else {
                       setSelectedMetricValue([...selectedMetricValue, metric])
-                      handleRemoveNumberOfFiltersApplied()
+                      handleSetNumberOfFiltersApplied()
                     }
-                    setShowOnlySelectMatricsFromMatricList(
-                      !showOnlySelectMatricsFromMatricList,
-                    )
+                    setShowOnlySelectMatricsFromMatricList(true)
                   }}
                 >
                   <div className="flex items-center space-x-2">
@@ -410,22 +406,20 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                   </>
                 ))}
                 <div>
-                  {numberOfFiltersApplied > 0 && (
-                    <Button
-                      variant="contained"
-                      color="inherit"
-                      className="bg-gray-900 text-white rounded-xl mt-2 w-full"
-                      sx={{
-                        backgroundColor: '#000000',
-                        color: '#FFFFFF',
-                      }}
-                      onClick={() => {
-                        setShowOnlySelectMatricsFromMatricList(false)
-                      }}
-                    >
-                      Apply <KeyboardReturnIcon />
-                    </Button>
-                  )}
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    className="bg-gray-900 text-white rounded-xl mt-2 w-full"
+                    sx={{
+                      backgroundColor: '#000000',
+                      color: '#FFFFFF',
+                    }}
+                    onClick={() => {
+                      setShowOnlySelectMatricsFromMatricList(false)
+                    }}
+                  >
+                    Apply <KeyboardReturnIcon />
+                  </Button>
                 </div>
               </div>
             )}
