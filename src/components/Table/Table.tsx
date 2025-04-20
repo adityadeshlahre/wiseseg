@@ -171,8 +171,8 @@ const Table: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <div className="overflow-auto">
-        <table className="min-w-full border border-gray-300 text-sm rounded-2xl overflow-hidden shadow-sm">
+      <div className="overflow-auto border-2 rounded-lg shadow-sm">
+        <table className="min-w-full border border-gray-300 text-sm overflow-hidden shadow-sm">
           <thead className="bg-lime-100 rounded-t-lg overflow-hidden">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -218,28 +218,27 @@ const Table: React.FC<Props> = ({ data }) => {
             ))}
           </tbody>
         </table>
-
-        <div className="mt-4 flex justify-between items-center text-sm text-black">
-          <div className="px-2 py-1 border-2 rounded disabled:opacity-50">
-            Page {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="px-2 py-1 border-2 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="px-2 py-1 border-2 rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+      </div>
+      <div className="mt-4 flex justify-between items-center text-sm text-black">
+        <div className="px-2 py-1 border-2 rounded disabled:opacity-50">
+          Page {table.getState().pagination.pageIndex + 1} of{' '}
+          {table.getPageCount()}
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="px-2 py-1 border-2 rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="px-2 py-1 border-2 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </div>
 
@@ -290,6 +289,10 @@ const Table: React.FC<Props> = ({ data }) => {
                 <span>{selectedRowData.creative_name}</span>
               </div>
               <div className="flex justify-between border-b pb-1">
+                <span className="font-semibold">Ad Group</span>
+                <span>{selectedRowData.ad_group}</span>
+              </div>
+              <div className="flex justify-between border-b pb-1">
                 <span className="font-semibold">Spend</span>
                 <span>{selectedRowData.spend}</span>
               </div>
@@ -330,13 +333,18 @@ const Table: React.FC<Props> = ({ data }) => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
+            width: 900,
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
           }}
         >
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <div>
+              <h2 className="text-3xl font-semibold">
+                {selectedRowData?.creative_name}
+              </h2>
+            </div>
             <button onClick={handleCloseModal2}>
               <div className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-md hover:bg-lime-300">
                 <CloseIcon />
@@ -347,16 +355,19 @@ const Table: React.FC<Props> = ({ data }) => {
           <hr />
           <br />
           {selectedRowData ? (
-            <div className="grid grid-cols-2 gap-4 text-sm mt-4 max-h-[60vh] overflow-y-auto pr-2">
+            <div className="grid gap-4 text-sm mt-4 max-h-[60vh] overflow-y-auto pr-2">
               {Object.entries(selectedRowData).map(([key, value]) => (
-                <React.Fragment key={key}>
-                  <div className="font-semibold capitalize truncate">
+                <div
+                  key={key}
+                  className="border rounded-xl p-3 shadow-sm bg-gray-50"
+                >
+                  <div className="text-md font-semibold text-gray-900 uppercase mb-1">
                     {key.replace(/_/g, ' ')}
                   </div>
-                  <div className="truncate" title={String(value)}>
+                  <div className="text-gray-900 break-words whitespace-pre-wrap">
                     {String(value)}
                   </div>
-                </React.Fragment>
+                </div>
               ))}
             </div>
           ) : (

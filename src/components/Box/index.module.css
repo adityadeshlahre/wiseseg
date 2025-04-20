@@ -1,4 +1,6 @@
 .box {
   display: grid;
   place-content: center;
+  justify-content: center;
+  padding: 40px;
 }

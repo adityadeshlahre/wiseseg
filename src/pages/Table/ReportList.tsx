@@ -25,16 +25,15 @@ const ReportsList: React.FC<Props> = () => {
 
   return (
     <>
-      <section className={styles.documentList}>
-        <Filter
-          showFilter={reportsList?.length > 0}
-          numberOfFiltersApplied={numberOfFiltersApplied}
-          setNumberOfFiltersApplied={(value: number) =>
-            setNumberOfFiltersApplied(value)
-          }
-        />
-        {reportsList?.length === 0 ? <Spinner /> : <Table data={reportsList} />}
-      </section>
+      <Filter
+        showFilter={reportsList?.length > 0}
+        numberOfFiltersApplied={numberOfFiltersApplied}
+        setNumberOfFiltersApplied={(value: number) =>
+          setNumberOfFiltersApplied(value)
+        }
+      />
+      <br />
+      {reportsList?.length === 0 ? <Spinner /> : <Table data={reportsList} />}
     </>
   )
 }

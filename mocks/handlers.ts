@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { http, HttpResponse } from 'msw'
 
 const sleep = async (ms: number): Promise<void> =>

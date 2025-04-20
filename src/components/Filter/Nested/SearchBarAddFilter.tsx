@@ -10,7 +10,11 @@ import {
   Tab,
   Tabs,
 } from '@mui/material'
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
 import React from 'react'
+import SideView from '@/svgs/SideView'
+import Delete from '@/svgs/Delete'
+import Dropdown from '@/svgs/Dropdown'
 
 interface Props {}
 
@@ -37,8 +41,13 @@ const SearchBarAddFilter: React.FC<Props> = () => {
   ]
 
   const [selectedTagList, setSelectedTagList] = React.useState<
-    { id: number; lable: string }[]
+    {
+      id: number
+      lable: string
+      tagListConditon?: { id: number; lable: string }
+    }[]
   >([])
+
   const [showSelectValueList, setShowSelectValueList] = React.useState(false)
 
   const CharacterList: { id: number; lable: string }[] = [
@@ -57,11 +66,35 @@ const SearchBarAddFilter: React.FC<Props> = () => {
     { id: 5, lable: 'CPM' },
   ]
 
+  const [selectedMetricValue, setSelectedMetricValue] = React.useState<
+    {
+      id: number
+      lable: string
+      matricListCondition?: {
+        id: number
+        lable: string
+      }
+    }[]
+  >([])
+
+  const matricListCondition: { id: number; lable: string }[] = [
+    { id: 1, lable: 'Less than' },
+    { id: 2, lable: 'Greater than' },
+    { id: 3, lable: 'Equals' },
+  ]
+
+  const tagListCondition: { id: number; lable: string }[] = [
+    { id: 1, lable: 'Contains' },
+    { id: 2, lable: 'Does not contain' },
+    { id: 3, lable: 'is' },
+    { id: 4, lable: 'is not' },
+  ]
+
   return (
     <>
-      <div className="pt-2">
+      {/* <div className="pt-2">
         <SearchBar />
-      </div>
+      </div> */}
       <div className="text-black">
         <Tabs
           value={value}
@@ -75,76 +108,132 @@ const SearchBarAddFilter: React.FC<Props> = () => {
           <Tab label={'Tags'} />
           <Tab label={'Metrics'} />
         </Tabs>
-      </div>
-      <CustomTabPanel value={value} index={0}>
-        <div className="text-black">
-          {DimensionsList.map((dimension) => (
-            <div
-              key={dimension.id}
-              className="flex items-center justify-between hover:bg-lime-100 text-gray-800 px-4 rounded-xl"
-            >
-              <div className="flex items-center space-x-2">
-                <Checkbox />
-                <span className="text-sm">{dimension.lable}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <div className="text-black">
-          {TagsList.map((tag) => (
-            <button
-              onClick={() => {
-                if (selectedTagList.includes(tag)) {
-                  setSelectedTagList(
-                    selectedTagList.filter((item) => item.id !== tag.id),
-                  )
-                } else {
-                  setSelectedTagList([...selectedTagList, tag])
-                }
-                setShowSelectValueList(!showSelectValueList)
-              }}
-              key={tag.id}
-              className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-800 px-4 rounded-xl"
-            >
-              <div className="flex justify-center items-center space-x-2">
-                <MenuItem>
-                  <span className="text-sm text-center">{tag.lable}</span>
-                </MenuItem>
-              </div>
-            </button>
-          ))}
-        </div>
-        {showSelectValueList && (
+
+        <CustomTabPanel value={value} index={0}>
           <div className="text-black">
-            {CharacterList.map((character) => (
+            {DimensionsList.map((dimension) => (
               <div
-                key={character.id}
-                className="flex items-center justify-between hover:bg-lime-100 text-gray-800 px-4 rounded-xl"
+                key={dimension.id}
+                className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 rounded-xl"
               >
                 <div className="flex items-center space-x-2">
                   <Checkbox />
-                  <span className="text-sm">{character.lable}</span>
+                  <span className="text-sm">{dimension.lable}</span>
                 </div>
               </div>
             ))}
-            <Button
-              variant="contained"
-              color="inherit"
-              className="bg-gray-900 text-white rounded-xl mt-2 w-full"
-              onClick={() => {
-                setShowSelectValueList(false)
-              }}
-            >
-              Apply
-            </Button>
           </div>
-        )}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <div className="text-black">Metrics</div>
-      </CustomTabPanel>
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          <div className="text-black">
+            {TagsList.map((tag) => (
+              <button
+                onClick={() => {
+                  if (selectedTagList.includes(tag)) {
+                    setSelectedTagList(
+                      selectedTagList.filter((item) => item.id !== tag.id),
+                    )
+                  } else {
+                    setSelectedTagList([...selectedTagList, tag])
+                  }
+                  setShowSelectValueList(!showSelectValueList)
+                }}
+                key={tag.id}
+                className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+              >
+                <div className="flex justify-center items-center space-x-2">
+                  <span className="text-sm">{tag.lable}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+          <hr />
+          {showSelectValueList && (
+            <div className="text-black">
+              {CharacterList.map((character) => (
+                <div
+                  key={character.id}
+                  className="flex items-center justify-between hover:bg-lime-100 text-neutral-900 px-4 rounded-xl"
+                >
+                  <div className="flex items-center space-x-2">
+                    <Checkbox />
+                    <span className="text-sm">{character.lable}</span>
+                  </div>
+                </div>
+              ))}
+              <Button
+                variant="contained"
+                color="inherit"
+                className="bg-gray-900 text-white rounded-xl mt-2 w-full"
+                sx={{
+                  backgroundColor: '#000000',
+                  color: '#FFFFFF',
+                }}
+                onClick={() => {
+                  setShowSelectValueList(false)
+                }}
+              >
+                Apply <KeyboardReturnIcon />
+              </Button>
+            </div>
+          )}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <div className="text-black">
+            {metricsList.map((metric) => (
+              <button
+                key={metric.id}
+                className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+                onClick={() => {
+                  if (selectedMetricValue.includes(metric)) {
+                    setSelectedMetricValue(
+                      selectedMetricValue.filter(
+                        (item) => item.id !== metric.id,
+                      ),
+                    )
+                  } else {
+                    setSelectedMetricValue([...selectedMetricValue, metric])
+                  }
+                  // setShowSelectValueList(!showSelectValueList)
+                }}
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm">{metric.lable}</span>
+                </div>
+              </button>
+            ))}
+            <br />
+            <hr />
+            <br />
+            {selectedMetricValue.map((item) => (
+              <>
+                <div className="border-2 rounded-xl">
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs">Metrics</span>
+                      <SideView />
+                      <span className="text-xs">{item.lable}</span>
+                      <Dropdown />
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-md border-2">
+                      <Delete color="red" />
+                    </div>
+                  </div>
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+                  >
+                    {} <Dropdown />
+                  </div>
+                </div>
+              </>
+            ))}
+          </div>
+        </CustomTabPanel>
+      </div>
     </>
   )
 }

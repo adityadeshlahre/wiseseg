@@ -1,17 +1,12 @@
 ## Segwise Assignment
 
-### pnpm
+> If you want mocking sever side fetching event { loading effect } then run this app in development enviornment!
 
-```sh
-cd myapp
-pnpm install
-pnpm validate
-pnpm start
-```
+### Dev Environemnt Preview
 
-If you don't need TailwindCSS, run `pnpm remove:tailwind` after npm installed.
+![devENV](https://github.com/user-attachments/assets/df826470-23eb-4c16-8ba0-d13b0ed345ff)
 
-### Commands
+### pnpm commands
 
 ```sh
 pnpm dev             # start development server

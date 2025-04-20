@@ -31,3 +31,14 @@
   font-size: 32px;
   color: #61dafb;
 }
+
+.container {
+  min-height: 100vh;
+  min-width: 90%;
+  max-width: 90%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -6,6 +6,11 @@ interface Props {}
 
 const AddFilter: React.FC<Props> = () => {
   const [showSearchFilter, setShowSearchFilter] = React.useState<boolean>(false)
+  const [showTagFilter, setShowTagFilter] = React.useState<boolean>(false)
+  const [showMetricsFilter, setShowMetricsFilter] =
+    React.useState<boolean>(false)
+  const [showDimensionsFilter, setShowDimensionsFilter] =
+    React.useState<boolean>(false)
 
   return (
     <div className="absolute top-full mt-2 w-96 bg-white rounded-2xl shadow-xl p-4 z-50">

@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const Data: ReportsList = [
   {
     creative_id: 120214081337200422,
