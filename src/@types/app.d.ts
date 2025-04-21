@@ -8,7 +8,7 @@ declare type DocList = Doc[]
 declare interface Report {
   creative_id: number
   creative_name: string
-  tags?: string
+  tags?: tags
   country: string
   ad_network: string
   os: string
@@ -27,17 +27,17 @@ declare interface Report {
 
 // end card elements removal
 declare interface tags {
-  concept: string
-  atype: string
-  alanguage: string
-  cta: string
-  objects: string[]
-  ctalanguage: string
-  logopresent: string
-  cta_placement: string
-  bgcolor: string
-  bgsetting: string
-  ctabgcolor: string
+  Concept?: string
+  Audio_Type?: string
+  Audio_Language?: string
+  CTA?: string
+  Objects?: string[]
+  Language?: string
+  Logo_present?: string
+  CTA_Placement?: string
+  Background_Colour?: string
+  Background_setting?: string
+  CTA_background_colour?: string
 }
 
-declare type ReportsList = Report[]
+declare type ReportsListData = Report[]

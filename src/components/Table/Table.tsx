@@ -15,10 +15,15 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import CropFreeIcon from '@mui/icons-material/CropFree'
 import CloseIcon from '@mui/icons-material/Close'
 import { Modal, Box } from '@mui/material'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@radix-ui/react-popover'
 
 const fallbackData: any = []
 interface Props {
-  data: ReportList
+  data: ReportsListData
 }
 
 const Table: React.FC<Props> = ({ data }) => {
@@ -74,20 +79,56 @@ const Table: React.FC<Props> = ({ data }) => {
         header: 'Tags',
         accessorKey: 'tags',
         cell: ({ getValue }) => {
-          const tags = getValue() as string
-          const tagList = tags.split(',')
+          const tags = getValue() as tags
+          if (!tags || typeof tags !== 'object') return null
+
+          const tagEntries = Object.entries(tags).flatMap(([key, value]) => {
+            if (Array.isArray(value)) {
+              if (key === 'Objects') {
+                return [`${key} :`, ...value]
+              }
+              return value.map((item) => `${key}: ${item}`)
+            }
+            return [`${key}: ${value}`]
+          })
+
+          const displayTags =
+            tagEntries.length > 2
+              ? [tagEntries[0], '...', tagEntries[tagEntries.length - 1]]
+              : tagEntries
+
           return (
-            <div className="flex flex-wrap">
-              {tagList.map((tag, index) => (
-                <span
-                  key={index}
-                  className="mr-2 truncate max-w-[100px] cursor-pointer"
-                  title={tag}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="flex flex-wrap gap-2 cursor-pointer">
+                  {displayTags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 rounded-full bg-lime-200 text-black text-xs max-w-[200px] truncate"
+                      title={tag}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent
+                side="top"
+                className="bg-white p-4 rounded shadow-md max-w-sm z-50"
+              >
+                <div className="flex flex-wrap gap-2">
+                  {tagEntries.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 rounded-full bg-lime-200 text-black text-xs max-w-[200px] truncate"
+                      title={tag}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
           )
         },
       },
@@ -362,10 +403,49 @@ const Table: React.FC<Props> = ({ data }) => {
                   className="border rounded-xl p-3 shadow-sm bg-gray-50"
                 >
                   <div className="text-md font-semibold text-gray-900 uppercase mb-1">
-                    {key.replace(/_/g, ' ')}
+                    {key}
                   </div>
                   <div className="text-gray-900 break-words whitespace-pre-wrap">
-                    {String(value)}
+                    {key === 'tags' &&
+                    typeof value === 'object' &&
+                    value !== null ? (
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(value).flatMap(([tagKey, tagValue]) => {
+                          if (Array.isArray(tagValue)) {
+                            return [
+                              <span
+                                key={`${tagKey}-label`}
+                                className="px-2 py-1 rounded-full bg-lime-200 text-black text-sm"
+                              >
+                                {tagKey}
+                              </span>,
+                              ...tagValue.map((item, idx) => (
+                                <span
+                                  key={`${tagKey}-${idx}`}
+                                  className="px-2 py-1 rounded-full bg-lime-200 text-black text-sm"
+                                >
+                                  {item}
+                                </span>
+                              )),
+                            ]
+                          }
+                          return (
+                            <span
+                              key={tagKey}
+                              className="px-2 py-1 rounded-full bg-lime-200 text-black text-sm"
+                            >
+                              {`${tagKey}: ${tagValue}`}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    ) : typeof value === 'object' && value !== null ? (
+                      <pre className="whitespace-pre-wrap break-words text-xs bg-white p-2 rounded-md">
+                        {JSON.stringify(value, null, 2)}
+                      </pre>
+                    ) : (
+                      String(value)
+                    )}
                   </div>
                 </div>
               ))}

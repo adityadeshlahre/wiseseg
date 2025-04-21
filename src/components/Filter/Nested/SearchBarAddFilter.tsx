@@ -25,7 +25,7 @@ import {
   handleResetNumberOfFiltersApplied,
   handleSetNumberOfFiltersApplied,
   numberOfFiltersAppliedStore,
-} from '@/pages/Table/ReportList'
+} from '@/store/store'
 import { useStore } from '@tanstack/react-store'
 
 interface Props {}
@@ -108,19 +108,6 @@ const SearchBarAddFilter: React.FC<Props> = () => {
     showOnlySelectMatricsFromMatricList,
     setShowOnlySelectMatricsFromMatricList,
   ] = React.useState<boolean>(false)
-
-  // Toggle
-
-  const [alignment, setAlignment] = React.useState('web')
-
-  const handleToggleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newAlignment: string,
-  ) => {
-    setAlignment(newAlignment)
-  }
-
-  // Toggle
 
   return (
     <>

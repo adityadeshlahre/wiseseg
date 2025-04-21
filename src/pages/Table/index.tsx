@@ -16,6 +16,7 @@ const Index: React.FC<Props> = memo(() => {
         </div>
       </header>
       <Box>
+        {/* maybe this box need to me rmeoved */}
         <Suspense fallback={<Spinner size="xl" />}>
           <ReportsList />
         </Suspense>

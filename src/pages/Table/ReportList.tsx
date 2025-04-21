@@ -6,42 +6,27 @@ import styles from './DocList.module.css'
 import Table from '@/components/Table/Table'
 import Filter from '@/components/Filter/Filter'
 import { Data } from '@/Data/Data'
-import { Store, useStore } from '@tanstack/react-store'
+import { useStore } from '@tanstack/react-store'
+import {
+  dataStore,
+  handleSetNumberOfFiltersApplied,
+  handleSetReportsList,
+  numberOfFiltersAppliedStore,
+} from '@/store/store'
 interface Props {}
 
-export const numberOfFiltersAppliedStore = new Store({
-  numberOfFiltersApplied: 0,
-})
-
-export const handleSetNumberOfFiltersApplied = () => {
-  numberOfFiltersAppliedStore.setState((prev) => ({
-    numberOfFiltersApplied: prev.numberOfFiltersApplied + 1,
-  }))
-}
-
-export const handleRemoveNumberOfFiltersApplied = () => {
-  numberOfFiltersAppliedStore.setState((prev) => ({
-    numberOfFiltersApplied: prev.numberOfFiltersApplied - 1,
-  }))
-}
-
-export const handleResetNumberOfFiltersApplied = () => {
-  numberOfFiltersAppliedStore.setState(() => ({
-    numberOfFiltersApplied: 0,
-  }))
-}
-
 const ReportsList: React.FC<Props> = () => {
-  const [reportsList, setReportsList] = useState<ReportsList>([])
+  // const [reportsList, setReportsList] = useState<ReportsListData>([])
+  const { reportsList } = useStore(dataStore)
   const { numberOfFiltersApplied } = useStore(numberOfFiltersAppliedStore)
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       fetch('/api/reportslist')
         .then(async (res) => res.json())
-        .then((data) => setReportsList(data))
+        .then((data) => handleSetReportsList(data))
     } else {
-      setReportsList(Data)
+      handleSetReportsList(Data)
     }
   }, [])
 

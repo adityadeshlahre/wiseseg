@@ -1,4 +1,4 @@
-## Segwise Assignment
+## Segwise Assignment { Practice }
 
 > If you want mocking sever side fetching event { loading effect } then run this app in development enviornment!
 
@@ -12,3 +12,4 @@
 - [ ] Filtering can be improved
 - [ ] removing of RAW css
 - [ ] preview modal can be improved data and char representation
+- [ ] edge cases testing and fixing
