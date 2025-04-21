@@ -20,13 +20,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@radix-ui/react-popover'
+import { useStore } from '@tanstack/react-store'
+import { dataStore } from '@/store/store'
 
-const fallbackData: any = []
-interface Props {
-  data: ReportsListData
-}
+interface Props {}
 
-const Table: React.FC<Props> = ({ data }) => {
+const Table: React.FC<Props> = () => {
+  const { reportsList } = useStore(dataStore)
   const [sorting, setSorting] = useState<SortingState>([])
   const [openModal, setOpenModal] = useState(false)
   const [openModal2, setOpenModal2] = useState(false)
@@ -193,7 +193,7 @@ const Table: React.FC<Props> = ({ data }) => {
   )
 
   const table = useReactTable({
-    data,
+    data: reportsList,
     columns,
     state: {
       sorting,

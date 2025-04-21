@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import Spinner from '@/components/Spinner'
 
@@ -16,7 +16,6 @@ import {
 interface Props {}
 
 const ReportsList: React.FC<Props> = () => {
-  // const [reportsList, setReportsList] = useState<ReportsListData>([])
   const { reportsList } = useStore(dataStore)
   const { numberOfFiltersApplied } = useStore(numberOfFiltersAppliedStore)
 
@@ -38,7 +37,7 @@ const ReportsList: React.FC<Props> = () => {
         setNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
       />
       <br />
-      {reportsList?.length === 0 ? <Spinner /> : <Table data={reportsList} />}
+      {reportsList?.length === 0 ? <Spinner /> : <Table />}
     </>
   )
 }

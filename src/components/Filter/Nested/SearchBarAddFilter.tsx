@@ -27,6 +27,10 @@ import {
   numberOfFiltersAppliedStore,
 } from '@/store/store'
 import { useStore } from '@tanstack/react-store'
+import DimensionsTab from './DimensionsTab'
+import TagsTab from './TagsTab'
+import MetricsTab from './MetricsTab'
+import { processTagListForFiltering } from '@/utils/lib'
 
 interface Props {}
 
@@ -129,7 +133,7 @@ const SearchBarAddFilter: React.FC<Props> = () => {
         </Tabs>
 
         <CustomTabPanel value={value} index={0}>
-          <div className="text-black">
+          {/* <div className="text-black">
             {DimensionsList.map((dimension) => (
               <div
                 key={dimension.id}
@@ -141,10 +145,24 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
+          <DimensionsTab
+            dimensionsList={DimensionsList}
+            // handleRemoveNumberOfFiltersApplied={
+            //   handleRemoveNumberOfFiltersApplied
+            // }
+            // handleResetNumberOfFiltersApplied={
+            //   handleResetNumberOfFiltersApplied
+            // }
+            // handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
+            // selectedDimensionValue={''}
+            // setSelectedDimensionValue={() => {}}
+            // showOnlySelectDimensionFromDimensionList={false}
+            // setShowOnlySelectDimensionFromDimensionList={() => {}}
+          />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <div className="text-black">
+          {/* <div className="text-black">
             {TagsList.map((tag) => (
               <button
                 onClick={() => {
@@ -187,80 +205,78 @@ const SearchBarAddFilter: React.FC<Props> = () => {
               <hr />
               <div>
                 {selectedTagList.map((item) => (
-                  <>
-                    <div className="border-2 rounded-xl mb-2">
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs">Tag</span>
-                          <SideView />
-                          <span className="text-xs">{item.lable}</span>
-                          <Dropdown />
-                        </div>
-                        <div className="flex items-center space-x-2 rounded-md border-2 bg-white">
-                          <button
-                            onClick={() => {
-                              if (numberOfFiltersApplied > 1) {
-                                handleRemoveNumberOfFiltersApplied()
-                              } else {
-                                handleResetNumberOfFiltersApplied()
-                              }
-                            }}
-                            className="text-gray-600 hover:text-red-600 transition-colors mb-2 mx-1"
-                          >
-                            <DeleteSweepOutlinedIcon fontSize="medium" />
-                          </button>
-                        </div>
+                  <div className="border-2 rounded-xl mb-2">
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs">Tag</span>
+                        <SideView />
+                        <span className="text-xs">{item.lable}</span>
+                        <Dropdown />
                       </div>
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between text-gray-900 p-2 rounded-xl text-sm gap-2"
-                      >
-                        <FormControl
-                          size="small"
-                          sx={{ minWidth: 150 }}
-                          className="mr-2"
-                        >
-                          <Select
-                            defaultValue={tagListCondition[0].id}
-                            className="bg-white rounded-md hover:bg-gray-300"
-                            sx={{
-                              '& .MuiSelect-select': {
-                                padding: '8px',
-                                fontSize: '0.875rem',
-                              },
-                            }}
-                          >
-                            {tagListCondition.map((c) => (
-                              <MenuItem
-                                key={c.id}
-                                value={c.id}
-                                className="text-sm text-gray-900 hover:bg-gray-300"
-                              >
-                                {c.lable}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <TextField
-                          size="small"
-                          placeholder="Value"
-                          variant="outlined"
-                          className="rounded-md hover:border-lime-200 transition-colors"
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              borderRadius: '0.375rem',
-                              '&:hover fieldset': {
-                                borderColor: '#bef264',
-                              },
-                            },
+                      <div className="flex items-center space-x-2 rounded-md border-2 bg-white">
+                        <button
+                          onClick={() => {
+                            if (numberOfFiltersApplied > 1) {
+                              handleRemoveNumberOfFiltersApplied()
+                            } else {
+                              handleResetNumberOfFiltersApplied()
+                            }
                           }}
-                        />
+                          className="text-gray-600 hover:text-red-600 transition-colors mb-2 mx-1"
+                        >
+                          <DeleteSweepOutlinedIcon fontSize="medium" />
+                        </button>
                       </div>
                     </div>
-                  </>
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between text-gray-900 p-2 rounded-xl text-sm gap-2"
+                    >
+                      <FormControl
+                        size="small"
+                        sx={{ minWidth: 150 }}
+                        className="mr-2"
+                      >
+                        <Select
+                          defaultValue={tagListCondition[0].id}
+                          className="bg-white rounded-md hover:bg-gray-300"
+                          sx={{
+                            '& .MuiSelect-select': {
+                              padding: '8px',
+                              fontSize: '0.875rem',
+                            },
+                          }}
+                        >
+                          {tagListCondition.map((c) => (
+                            <MenuItem
+                              key={c.id}
+                              value={c.id}
+                              className="text-sm text-gray-900 hover:bg-gray-300"
+                            >
+                              {c.lable}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        size="small"
+                        placeholder="Value"
+                        variant="outlined"
+                        className="rounded-md hover:border-lime-200 transition-colors"
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '0.375rem',
+                            '&:hover fieldset': {
+                              borderColor: '#bef264',
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  </div>
                 ))}
               </div>
               <div>
@@ -280,10 +296,30 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                 </Button>
               </div>
             </div>
-          )}
+          )} */}
+          <TagsTab
+            characterList={processTagListForFiltering()}
+            selectedTagList={selectedTagList}
+            setSelectedTagList={setSelectedTagList}
+            handleRemoveNumberOfFiltersApplied={
+              handleRemoveNumberOfFiltersApplied
+            }
+            handleResetNumberOfFiltersApplied={
+              handleResetNumberOfFiltersApplied
+            }
+            handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
+            tagListCondition={tagListCondition}
+            showOnlySelectTagFromTagList={showOnlySelectTagFromTagList}
+            setShowOnlySelectTagFromTagList={setShowOnlySelectTagFromTagList}
+            tagsList={TagsList}
+            numberOfFiltersApplied={numberOfFiltersApplied}
+            setNumberOfFiltersApplied={function (value: number): void {
+              throw new Error('Function not implemented.')
+            }}
+          />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <div className="text-black flex flex-col gap-2">
+          {/* <div className="text-black flex flex-col gap-2">
             <div>
               {metricsList.map((metric) => (
                 <button
@@ -410,7 +446,30 @@ const SearchBarAddFilter: React.FC<Props> = () => {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
+          <MetricsTab
+            metricsList={metricsList}
+            selectedMetricValue={selectedMetricValue}
+            setSelectedMetricValue={setSelectedMetricValue}
+            handleRemoveNumberOfFiltersApplied={
+              handleRemoveNumberOfFiltersApplied
+            }
+            handleResetNumberOfFiltersApplied={
+              handleResetNumberOfFiltersApplied
+            }
+            handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
+            matricListCondition={matricListCondition}
+            showOnlySelectMatricsFromMatricList={
+              showOnlySelectMatricsFromMatricList
+            }
+            setShowOnlySelectMatricsFromMatricList={
+              setShowOnlySelectMatricsFromMatricList
+            }
+            numberOfFiltersApplied={numberOfFiltersApplied}
+            setNumberOfFiltersApplied={function (value: number): void {
+              throw new Error('Function not implemented.')
+            }}
+          />
         </CustomTabPanel>
       </div>
     </>
