@@ -63,203 +63,191 @@ const TagsTab: React.FC<Props> = ({
   )
 
   return (
-    <>
-      <div className="text-black flex flex-col gap-2">
-        <div>
-          {tagsList.map((tag) => (
-            <button
-              onClick={() => {
-                const isAlreadySelected = selectedTagList.some(
-                  (item) => item.id === tag.id,
+    <div className="text-black flex flex-col gap-2">
+      <div>
+        {tagsList.map((tag) => (
+          <button
+            onClick={() => {
+              const isAlreadySelected = selectedTagList.some(
+                (item) => item.id === tag.id,
+              )
+              if (isAlreadySelected) {
+                setSelectedTagList(
+                  selectedTagList.filter((item) => item.id !== tag.id),
                 )
-                if (isAlreadySelected) {
-                  setSelectedTagList(
-                    selectedTagList.filter((item) => item.id !== tag.id),
-                  )
-                  handleRemoveNumberOfFiltersApplied()
-                } else {
-                  setSelectedTagList([...selectedTagList, tag])
-                  handleSetNumberOfFiltersApplied()
-                  setActiveCharacterCategory(tag.key)
-                }
-                setShowOnlySelectTagFromTagList(true)
-              }}
-              key={tag.id}
-              className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
-            >
-              <div className="flex justify-center items-center space-x-2">
-                <span className="text-sm">{tag.lable}</span>
-              </div>
-            </button>
-          ))}
-        </div>
-        <hr />
-        {showOnlySelectTagFromTagList && (
-          <div>
-            {activeCharacterCategory && (
-              <>
-                <div className="border-2 rounded-xl mb-2">
-                  <div>
-                    {characterList[
-                      activeCharacterCategory as keyof typeof characterList
-                    ]?.map((character) => (
-                      <div
-                        key={character.id}
-                        className="flex items-center justify-between hover:bg-lime-100 text-neutral-900 px-4 rounded-xl"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            checked={selectedCharacters.includes(character.id)}
-                            onChange={() => {
-                              if (selectedCharacters.includes(character.id)) {
-                                setSelectedCharacters(
-                                  selectedCharacters.filter(
-                                    (id) => id !== character.id,
-                                  ),
-                                )
-                              } else {
-                                setSelectedCharacters([
-                                  ...selectedCharacters,
-                                  character.id,
-                                ])
-                              }
-                            }}
-                          />
-                          <span className="text-sm">{character.lable}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-            <div>
-              {selectedTagList.map((item) => (
-                <div
-                  key={`${item.id}-tag`}
-                  className="border-2 rounded-xl mb-2"
-                >
+                handleRemoveNumberOfFiltersApplied()
+              } else {
+                setSelectedTagList([...selectedTagList, tag])
+                handleSetNumberOfFiltersApplied()
+                setActiveCharacterCategory(tag.key)
+              }
+              setShowOnlySelectTagFromTagList(true)
+            }}
+            key={tag.id}
+            className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+          >
+            <div className="flex justify-center items-center space-x-2">
+              <span className="text-sm">{tag.lable}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+      <hr />
+      {showOnlySelectTagFromTagList && (
+        <div>
+          {activeCharacterCategory && (
+            <div className="border-2 rounded-xl mb-2">
+              <div>
+                {characterList[
+                  activeCharacterCategory as keyof typeof characterList
+                ]?.map((character) => (
                   <div
-                    key={`${item.id}-tag`}
-                    className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+                    key={character.id}
+                    className="flex items-center justify-between hover:bg-lime-100 text-neutral-900 px-4 rounded-xl"
                   >
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs">Tag</span>
-                      <SideView />
-                      <span className="text-xs">{item.lable}</span>
-                      <Dropdown />
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-md border-2 bg-white">
-                      <button
-                        onClick={() => {
-                          if (numberOfFiltersApplied > 1) {
-                            setSelectedTagList(
-                              selectedTagList.filter(
-                                (tag) => tag.id !== item.id,
+                      <Checkbox
+                        checked={selectedCharacters.includes(character.id)}
+                        onChange={() => {
+                          if (selectedCharacters.includes(character.id)) {
+                            setSelectedCharacters(
+                              selectedCharacters.filter(
+                                (id) => id !== character.id,
                               ),
                             )
-                            handleRemoveNumberOfFiltersApplied()
                           } else {
-                            handleResetNumberOfFiltersApplied()
-                            setSelectedTagList([])
+                            setSelectedCharacters([
+                              ...selectedCharacters,
+                              character.id,
+                            ])
                           }
                         }}
-                        className="text-gray-600 hover:text-red-600 transition-colors mb-2 mx-1"
-                      >
-                        <DeleteSweepOutlinedIcon fontSize="medium" />
-                      </button>
+                      />
+                      <span className="text-sm">{character.lable}</span>
                     </div>
                   </div>
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between text-gray-900 p-2 rounded-xl text-sm gap-2"
-                  >
-                    <FormControl
-                      size="small"
-                      sx={{ minWidth: 150 }}
-                      className="mr-2"
-                    >
-                      <Select
-                        defaultValue={tagListCondition[0].id}
-                        value={
-                          item.tagListConditon?.id || tagListCondition[0].id
-                        }
-                        onChange={(e) => {
-                          const selectedConditionId = Number(e.target.value)
-                          const updatedTags = selectedTagList.map((tag) =>
-                            tag.id === item.id
-                              ? {
-                                  ...tag,
-                                  tagListConditon: tagListCondition.find(
-                                    (c) => c.id === selectedConditionId,
-                                  ),
-                                }
-                              : tag,
+                ))}
+              </div>
+            </div>
+          )}
+          <div>
+            {selectedTagList.map((item) => (
+              <div key={`${item.id}-tag`} className="border-2 rounded-xl mb-2">
+                <div
+                  key={`${item.id}-tag`}
+                  className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs">Tag</span>
+                    <SideView />
+                    <span className="text-xs">{item.lable}</span>
+                    <Dropdown />
+                  </div>
+                  <div className="flex items-center space-x-2 rounded-md border-2 bg-white">
+                    <button
+                      onClick={() => {
+                        if (numberOfFiltersApplied > 1) {
+                          setSelectedTagList(
+                            selectedTagList.filter((tag) => tag.id !== item.id),
                           )
-                          setSelectedTagList(updatedTags)
-                        }}
-                        className="bg-white rounded-md hover:bg-gray-300"
-                        sx={{
-                          '& .MuiSelect-select': {
-                            padding: '8px',
-                            fontSize: '0.875rem',
-                          },
-                        }}
-                      >
-                        {tagListCondition.map((c) => (
-                          <MenuItem
-                            key={c.id}
-                            value={c.id}
-                            className="text-sm text-gray-900 hover:bg-gray-300"
-                          >
-                            {c.lable}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <TextField
-                      size="small"
-                      placeholder="Value"
-                      variant="outlined"
-                      className="rounded-md hover:border-lime-200 transition-colors"
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '0.375rem',
-                          '&:hover fieldset': {
-                            borderColor: '#bef264',
-                          },
-                        },
+                          handleRemoveNumberOfFiltersApplied()
+                        } else {
+                          handleResetNumberOfFiltersApplied()
+                          setSelectedTagList([])
+                        }
                       }}
-                    />
+                      className="text-gray-600 hover:text-red-600 transition-colors mb-2 mx-1"
+                    >
+                      <DeleteSweepOutlinedIcon fontSize="medium" />
+                    </button>
                   </div>
                 </div>
-              ))}
-              {/* {selectedTagList.length > 1 && <ToggleButtonWithSmoothTransition />} */}
-            </div>
-            <div>
-              <Button
-                variant="contained"
-                color="inherit"
-                className="bg-gray-900 text-white rounded-xl mt-2 w-full"
-                sx={{
-                  backgroundColor: '#000000',
-                  color: '#FFFFFF',
-                }}
-                onClick={() => {
-                  setShowOnlySelectTagFromTagList(false)
-                  filterReportsListBasedOnSelectedTags(
-                    selectedTagList,
-                    reportsList,
-                  )
-                }}
-              >
-                Apply <KeyboardReturnIcon />
-              </Button>
-            </div>
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between text-gray-900 p-2 rounded-xl text-sm gap-2"
+                >
+                  <FormControl
+                    size="small"
+                    sx={{ minWidth: 150 }}
+                    className="mr-2"
+                  >
+                    <Select
+                      defaultValue={tagListCondition[0].id}
+                      value={item.tagListConditon?.id || tagListCondition[0].id}
+                      onChange={(e) => {
+                        const selectedConditionId = Number(e.target.value)
+                        const updatedTags = selectedTagList.map((tag) =>
+                          tag.id === item.id
+                            ? {
+                                ...tag,
+                                tagListConditon: tagListCondition.find(
+                                  (c) => c.id === selectedConditionId,
+                                ),
+                              }
+                            : tag,
+                        )
+                        setSelectedTagList(updatedTags)
+                      }}
+                      className="bg-white rounded-md hover:bg-gray-300"
+                      sx={{
+                        '& .MuiSelect-select': {
+                          padding: '8px',
+                          fontSize: '0.875rem',
+                        },
+                      }}
+                    >
+                      {tagListCondition.map((c) => (
+                        <MenuItem
+                          key={c.id}
+                          value={c.id}
+                          className="text-sm text-gray-900 hover:bg-gray-300"
+                        >
+                          {c.lable}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    size="small"
+                    placeholder="Value"
+                    variant="outlined"
+                    className="rounded-md hover:border-lime-200 transition-colors"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: '0.375rem',
+                        '&:hover fieldset': {
+                          borderColor: '#bef264',
+                        },
+                      },
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-    </>
+          <div>
+            <Button
+              variant="contained"
+              color="inherit"
+              className="bg-gray-900 text-white rounded-xl mt-2 w-full"
+              sx={{
+                backgroundColor: '#000000',
+                color: '#FFFFFF',
+              }}
+              onClick={() => {
+                setShowOnlySelectTagFromTagList(false)
+                filterReportsListBasedOnSelectedTags(
+                  selectedTagList,
+                  reportsList,
+                )
+              }}
+            >
+              Apply <KeyboardReturnIcon />
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

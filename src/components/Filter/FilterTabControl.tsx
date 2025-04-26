@@ -1,29 +1,11 @@
 import Search from '@/svgs/Search'
-import {
-  alpha,
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  InputBase,
-  MenuItem,
-  Select,
-  styled,
-  Tab,
-  Tabs,
-  TextField,
-} from '@mui/material'
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
+import { alpha, Box, InputBase, styled, Tab, Tabs } from '@mui/material'
 import React from 'react'
-import SideView from '@/svgs/SideView'
-import Delete from '@/svgs/Delete'
-import Dropdown from '@/svgs/Dropdown'
-import ToggleButtonWithSmoothTransition from './Toggle/ToggleButton'
-import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
 import {
   handleRemoveNumberOfFiltersApplied,
   handleResetNumberOfFiltersApplied,
   handleSetNumberOfFiltersApplied,
+  handleUpdateNumberOfFiltersApplied,
   numberOfFiltersAppliedStore,
 } from '@/store/store'
 import { useStore } from '@tanstack/react-store'
@@ -144,18 +126,22 @@ const FilterTabControl: React.FC<Props> = () => {
             numberOfFiltersApplied={numberOfFiltersApplied}
             selectedDimensionValue={[]}
             setNumberOfFiltersApplied={function (value: number): void {
-              throw new Error('Function not implemented.')
+              handleUpdateNumberOfFiltersApplied(value)
             }}
             // setSelectedDimensionValue={() => {}}
-            // handleRemoveNumberOfFiltersApplied={
-            //   handleRemoveNumberOfFiltersApplied
-            // }
-            // handleResetNumberOfFiltersApplied={
-            //   handleResetNumberOfFiltersApplied
-            // }
-            // handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
-            // showOnlySelectDimensionFromDimensionList={false}
-            // setShowOnlySelectDimensionFromDimensionList={() => {}}
+            handleRemoveNumberOfFiltersApplied={
+              handleRemoveNumberOfFiltersApplied
+            }
+            handleResetNumberOfFiltersApplied={
+              handleResetNumberOfFiltersApplied
+            }
+            handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
+            showOnlySelectDimensionFromDimensionList={false}
+            setShowOnlySelectDimensionFromDimensionList={function (
+              value: boolean,
+            ): void {
+              setShowOnlySelectDimensionFromDimensionList(value)
+            }}
           />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
@@ -172,11 +158,13 @@ const FilterTabControl: React.FC<Props> = () => {
             handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
             tagListCondition={tagListCondition}
             showOnlySelectTagFromTagList={showOnlySelectTagFromTagList}
-            setShowOnlySelectTagFromTagList={setShowOnlySelectTagFromTagList}
+            setShowOnlySelectTagFromTagList={function (value: boolean): void {
+              setShowOnlySelectTagFromTagList(value)
+            }}
             tagsList={TagsList}
             numberOfFiltersApplied={numberOfFiltersApplied}
             setNumberOfFiltersApplied={function (value: number): void {
-              throw new Error('Function not implemented.')
+              handleUpdateNumberOfFiltersApplied(value)
             }}
           />
         </CustomTabPanel>
@@ -196,12 +184,14 @@ const FilterTabControl: React.FC<Props> = () => {
             showOnlySelectMatricsFromMatricList={
               showOnlySelectMatricsFromMatricList
             }
-            setShowOnlySelectMatricsFromMatricList={
-              setShowOnlySelectMatricsFromMatricList
-            }
+            setShowOnlySelectMatricsFromMatricList={function (
+              value: boolean,
+            ): void {
+              setShowOnlySelectMatricsFromMatricList(value)
+            }}
             numberOfFiltersApplied={numberOfFiltersApplied}
             setNumberOfFiltersApplied={function (value: number): void {
-              throw new Error('Function not implemented.')
+              handleUpdateNumberOfFiltersApplied(value)
             }}
           />
         </CustomTabPanel>

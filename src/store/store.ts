@@ -4,6 +4,12 @@ export const numberOfFiltersAppliedStore = new Store({
   numberOfFiltersApplied: 0,
 })
 
+export const handleUpdateNumberOfFiltersApplied = (value: number) => {
+  numberOfFiltersAppliedStore.setState((prev) => ({
+    numberOfFiltersApplied: prev.numberOfFiltersApplied + value,
+  }))
+}
+
 export const handleSetNumberOfFiltersApplied = () => {
   numberOfFiltersAppliedStore.setState((prev) => ({
     numberOfFiltersApplied: prev.numberOfFiltersApplied + 1,
