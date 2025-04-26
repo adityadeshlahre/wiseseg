@@ -48,17 +48,19 @@ const ToggleButtonWithSmoothTransition = () => {
   }
 
   return (
-    <ToggleContainer>
-      <AnimatedToggleButtonGroup
-        value={alignment}
-        exclusive
-        onChange={handleToggleChange}
-        aria-label="Platform"
-      >
-        <CustomToggleButton value="web">AND</CustomToggleButton>
-        <CustomToggleButton value="android">OR</CustomToggleButton>
-      </AnimatedToggleButtonGroup>
-    </ToggleContainer>
+    <div className="flex justify-center items-center p-2 rounded-xl text-sm gap-2">
+      <ToggleContainer>
+        <AnimatedToggleButtonGroup
+          value={alignment}
+          exclusive
+          onChange={handleToggleChange}
+          aria-label="Platform"
+        >
+          <CustomToggleButton value="web">AND</CustomToggleButton>
+          <CustomToggleButton value="android">OR</CustomToggleButton>
+        </AnimatedToggleButtonGroup>
+      </ToggleContainer>
+    </div>
   )
 }
 

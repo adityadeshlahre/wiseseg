@@ -20,13 +20,13 @@ const ReportsList: React.FC<Props> = () => {
   const { numberOfFiltersApplied } = useStore(numberOfFiltersAppliedStore)
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      fetch('/api/reportslist')
-        .then(async (res) => res.json())
-        .then((data) => handleSetReportsList(data))
-    } else {
-      handleSetReportsList(Data)
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   fetch('/api/reportslist')
+    //     .then(async (res) => res.json())
+    //     .then((data) => handleSetReportsList(data))
+    // } else {
+    handleSetReportsList(Data)
+    // }
   }, [])
 
   return (

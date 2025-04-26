@@ -14,11 +14,18 @@ import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
 import { Store, useStore } from '@tanstack/react-store'
 import { dataStore } from '@/store/store'
 import { filterReportsListBasedOnSelectedTags } from '@/utils/lib'
+import ToggleButtonWithSmoothTransition from '../Toggle/ToggleButton'
 
 interface Props {
-  tagsList: { id: number; lable: string }[]
+  tagsList: { id: number; lable: string; key: string }[]
   tagListCondition: { id: number; lable: string }[]
-  characterList: { id: number; lable: string }[]
+  characterList: {
+    Character: { id: number; lable: string; category: string }[]
+    Background: { id: number; lable: string; category: string }[]
+    Elements: { id: number; lable: string; category: string }[]
+    CTA_Position: { id: number; lable: string; category: string }[]
+    CTA_Text: { id: number; lable: string; category: string }[]
+  }
   numberOfFiltersApplied: number
   setNumberOfFiltersApplied: (value: number) => void
   selectedTagList: {
@@ -48,13 +55,23 @@ const TagsTab: React.FC<Props> = ({
   showOnlySelectTagFromTagList,
   setShowOnlySelectTagFromTagList,
 }) => {
+  const { reportsList } = useStore(dataStore)
+  const [activeCharacterCategory, setActiveCharacterCategory] =
+    React.useState<string>('')
+  const [selectedCharacters, setSelectedCharacters] = React.useState<number[]>(
+    [],
+  )
+
   return (
     <>
       <div className="text-black">
         {tagsList.map((tag) => (
           <button
             onClick={() => {
-              if (selectedTagList.includes(tag)) {
+              const isAlreadySelected = selectedTagList.some(
+                (item) => item.id === tag.id,
+              )
+              if (isAlreadySelected) {
                 setSelectedTagList(
                   selectedTagList.filter((item) => item.id !== tag.id),
                 )
@@ -62,6 +79,7 @@ const TagsTab: React.FC<Props> = ({
               } else {
                 setSelectedTagList([...selectedTagList, tag])
                 handleSetNumberOfFiltersApplied()
+                setActiveCharacterCategory(tag.key)
               }
               setShowOnlySelectTagFromTagList(true)
             }}
@@ -78,24 +96,46 @@ const TagsTab: React.FC<Props> = ({
       {showOnlySelectTagFromTagList && (
         <div className="text-black flex flex-col gap-2">
           <div>
-            {characterList.map((character) => (
-              <div
-                key={character.id}
-                className="flex items-center justify-between hover:bg-lime-100 text-neutral-900 px-4 rounded-xl"
-              >
-                <div className="flex items-center space-x-2">
-                  <Checkbox />
-                  <span className="text-sm">{character.lable}</span>
-                </div>
+            {activeCharacterCategory && (
+              <div>
+                {characterList[
+                  activeCharacterCategory as keyof typeof characterList
+                ]?.map((character) => (
+                  <div
+                    key={character.id}
+                    className="flex items-center justify-between hover:bg-lime-100 text-neutral-900 px-4 rounded-xl"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={selectedCharacters.includes(character.id)}
+                        onChange={() => {
+                          if (selectedCharacters.includes(character.id)) {
+                            setSelectedCharacters(
+                              selectedCharacters.filter(
+                                (id) => id !== character.id,
+                              ),
+                            )
+                          } else {
+                            setSelectedCharacters([
+                              ...selectedCharacters,
+                              character.id,
+                            ])
+                          }
+                        }}
+                      />
+                      <span className="text-sm">{character.lable}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
           <hr />
           <div>
             {selectedTagList.map((item) => (
-              <div className="border-2 rounded-xl mb-2">
+              <div key={`${item.id}-tag`} className="border-2 rounded-xl mb-2">
                 <div
-                  key={item.id}
+                  key={`${item.id}-tag`}
                   className="flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
                 >
                   <div className="flex items-center space-x-2">
@@ -108,9 +148,13 @@ const TagsTab: React.FC<Props> = ({
                     <button
                       onClick={() => {
                         if (numberOfFiltersApplied > 1) {
+                          setSelectedTagList(
+                            selectedTagList.filter((tag) => tag.id !== item.id),
+                          )
                           handleRemoveNumberOfFiltersApplied()
                         } else {
                           handleResetNumberOfFiltersApplied()
+                          setSelectedTagList([])
                         }
                       }}
                       className="text-gray-600 hover:text-red-600 transition-colors mb-2 mx-1"
@@ -130,6 +174,21 @@ const TagsTab: React.FC<Props> = ({
                   >
                     <Select
                       defaultValue={tagListCondition[0].id}
+                      value={item.tagListConditon?.id || tagListCondition[0].id}
+                      onChange={(e) => {
+                        const selectedConditionId = Number(e.target.value)
+                        const updatedTags = selectedTagList.map((tag) =>
+                          tag.id === item.id
+                            ? {
+                                ...tag,
+                                tagListConditon: tagListCondition.find(
+                                  (c) => c.id === selectedConditionId,
+                                ),
+                              }
+                            : tag,
+                        )
+                        setSelectedTagList(updatedTags)
+                      }}
                       className="bg-white rounded-md hover:bg-gray-300"
                       sx={{
                         '& .MuiSelect-select': {
@@ -166,6 +225,7 @@ const TagsTab: React.FC<Props> = ({
                 </div>
               </div>
             ))}
+            {/* {selectedTagList.length > 1 && <ToggleButtonWithSmoothTransition />} */}
           </div>
           <div>
             <Button
@@ -178,7 +238,10 @@ const TagsTab: React.FC<Props> = ({
               }}
               onClick={() => {
                 setShowOnlySelectTagFromTagList(false)
-                filterReportsListBasedOnSelectedTags(selectedTagList)
+                filterReportsListBasedOnSelectedTags(
+                  selectedTagList,
+                  reportsList,
+                )
               }}
             >
               Apply <KeyboardReturnIcon />

@@ -4,13 +4,16 @@ import { dataStore, handleSetReportsList } from '@/store/store'
 import { useStore } from '@tanstack/react-store'
 
 export const processTagListForFiltering = (): {
-  id: number
-  lable: string
-}[] => {
+  Character: { id: number; lable: string; category: string }[]
+  Background: { id: number; lable: string; category: string }[]
+  Elements: { id: number; lable: string; category: string }[]
+  CTA_Position: { id: number; lable: string; category: string }[]
+  CTA_Text: { id: number; lable: string; category: string }[]
+} => {
   const { reportsList } = useStore(dataStore)
 
   const uniqueTags = {
-    Concepts: new Set<string>(),
+    Character: new Set<string>(),
     Background: new Set<string>(),
     Elements: new Set<string>(),
     CTA_Position: new Set<string>(),
@@ -20,7 +23,7 @@ export const processTagListForFiltering = (): {
   reportsList.forEach((item) => {
     if (item.tags) {
       if (item.tags.Concept) {
-        uniqueTags.Concepts.add(item.tags.Concept)
+        uniqueTags.Character.add(item.tags.Concept)
       }
       if (item.tags.Background_Colour) {
         uniqueTags.Background.add(item.tags.Background_Colour)
@@ -37,40 +40,48 @@ export const processTagListForFiltering = (): {
     }
   })
 
-  const characterList = [
-    { id: 1, lable: 'Select all' },
-    ...Array.from(uniqueTags.Concepts).map((concept, index) => ({
-      id: index + 2,
-      lable: concept,
-    })),
-    ...Array.from(uniqueTags.Background).map((background, index) => ({
-      id: index + 2 + uniqueTags.Concepts.size,
-      lable: background,
-    })),
-    ...Array.from(uniqueTags.Elements).map((element, index) => ({
-      id: index + 2 + uniqueTags.Concepts.size + uniqueTags.Background.size,
-      lable: element,
-    })),
-    ...Array.from(uniqueTags.CTA_Position).map((position, index) => ({
-      id:
-        index +
-        2 +
-        uniqueTags.Concepts.size +
-        uniqueTags.Background.size +
-        uniqueTags.Elements.size,
-      lable: position,
-    })),
-    ...Array.from(uniqueTags.CTA_Text).map((cta, index) => ({
-      id:
-        index +
-        2 +
-        uniqueTags.Concepts.size +
-        uniqueTags.Background.size +
-        uniqueTags.Elements.size +
-        uniqueTags.CTA_Position.size,
-      lable: cta,
-    })),
-  ]
+  const characterList = {
+    Character: [
+      { id: 0, lable: 'Select all', category: 'Character' },
+      ...Array.from(uniqueTags.Character).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        category: 'Character',
+      })),
+    ],
+    Background: [
+      { id: 0, lable: 'Select all', category: 'Background' },
+      ...Array.from(uniqueTags.Background).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        category: 'Background',
+      })),
+    ],
+    Elements: [
+      { id: 0, lable: 'Select all', category: 'Elements' },
+      ...Array.from(uniqueTags.Elements).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        category: 'Elements',
+      })),
+    ],
+    CTA_Position: [
+      { id: 0, lable: 'Select all', category: 'CTA_Position' },
+      ...Array.from(uniqueTags.CTA_Position).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        category: 'CTA_Position',
+      })),
+    ],
+    CTA_Text: [
+      { id: 0, lable: 'Select all', category: 'CTA_Text' },
+      ...Array.from(uniqueTags.CTA_Text).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        category: 'CTA_Text',
+      })),
+    ],
+  }
 
   return characterList
 }
@@ -82,17 +93,13 @@ export const filterReportsListBasedOnSelectedTags = (
     lable: string
     tagListCondition?: { id: number; lable: string }
   }[],
+  reportsList: ReportList,
 ): ReportList => {
-  const { reportsList } = useStore(dataStore)
-
   const updatedReportsList = reportsList.filter((item) => {
     return selectedTags.every((tag) => {
       const tagKey = tag.lable.replace(/ /g, '_')
-      return (
-        item.tags &&
-        (item.tags as Record<string, string>)[tagKey] &&
-        (item.tags as Record<string, string>)[tagKey] === tag.lable
-      )
+      const tagValue = (item.tags as Record<string, string>)?.[tagKey]
+      return tagValue !== undefined && tagValue !== ''
     })
   })
 
@@ -112,9 +119,8 @@ export const filterReportsListBasedOnSelectedMetricAndConditions = (
       lable: string
     }
   }[],
+  reportsList: ReportList,
 ): ReportList => {
-  const { reportsList } = useStore(dataStore)
-
   const filteredList = reportsList.filter((item) => {
     return selectedMetricValue.every((selectedMetric) => {
       const metricValue = (item as any)[selectedMetric.lable.toLowerCase()]

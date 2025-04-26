@@ -1,6 +1,6 @@
 import Plus from '@/svgs/Plus'
 import React from 'react'
-import SearchBarAddFilter from './Nested/SearchBarAddFilter'
+import FilterTabControl from './FilterTabControl'
 
 interface Props {}
 
@@ -25,7 +25,7 @@ const AddFilter: React.FC<Props> = () => {
         </span>
         <span className="text-sm">Add Filter</span>
       </button>
-      {showSearchFilter && <SearchBarAddFilter />}
+      {showSearchFilter && <FilterTabControl />}
     </div>
   )
 }

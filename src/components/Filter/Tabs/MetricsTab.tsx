@@ -6,15 +6,18 @@ import ToggleButtonWithSmoothTransition from '../Toggle/ToggleButton'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn'
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined'
 import { filterReportsListBasedOnSelectedMetricAndConditions } from '@/utils/lib'
+import { useStore } from '@tanstack/react-store'
+import { dataStore } from '@/store/store'
 
 interface Props {
-  metricsList: { id: number; lable: string }[]
+  metricsList: { id: number; lable: string; key: string }[]
   matricListCondition: { id: number; lable: string }[]
   numberOfFiltersApplied: number
   setNumberOfFiltersApplied: (value: number) => void
   selectedMetricValue: {
     id: number
     lable: string
+    key: string
     matricListCondition?: {
       id: number
       lable: string
@@ -40,25 +43,63 @@ const MetricsTab: React.FC<Props> = ({
   showOnlySelectMatricsFromMatricList,
   setShowOnlySelectMatricsFromMatricList,
 }) => {
+  const { reportsList } = useStore(dataStore)
+  const handleSelectMetricCondition = (
+    metricId: number,
+    conditionId: number,
+  ) => {
+    const updatedMetrics = selectedMetricValue.map((item) =>
+      item.id === metricId
+        ? {
+            ...item,
+            metricListCondition: matricListCondition.find(
+              (c) => c.id === conditionId,
+            ),
+          }
+        : item,
+    )
+    setSelectedMetricValue(updatedMetrics)
+  }
+
+  const handleSetMetricValue = (metricId: number, value: number) => {
+    const updatedMetrics = selectedMetricValue.map((item) =>
+      item.id === metricId ? { ...item, value } : item,
+    )
+    setSelectedMetricValue(updatedMetrics)
+  }
+
+  const handleRemoveMetric = (metricId: number) => {
+    const updatedMetrics = selectedMetricValue.filter(
+      (item) => item.id !== metricId,
+    )
+    setSelectedMetricValue(updatedMetrics)
+    handleRemoveNumberOfFiltersApplied()
+  }
+
+  const handleMetricClick = (metric: { id: number; lable: string }) => {
+    const isAlreadySelected = selectedMetricValue.some(
+      (item) => item.id === metric.id,
+    )
+    if (isAlreadySelected) {
+      setSelectedMetricValue(
+        selectedMetricValue.filter((item) => item.id !== metric.id),
+      )
+      handleRemoveNumberOfFiltersApplied()
+    } else {
+      setSelectedMetricValue([...selectedMetricValue, metric])
+      handleSetNumberOfFiltersApplied()
+    }
+    setShowOnlySelectMatricsFromMatricList(true)
+  }
+
   return (
     <div className="text-black flex flex-col gap-2">
       <div>
         {metricsList.map((metric) => (
           <button
-            key={metric.id}
+            key={`${metric.id}-metric`}
             className="w-full flex items-center justify-between hover:bg-lime-100 text-gray-900 px-4 py-2 rounded-xl"
-            onClick={() => {
-              if (selectedMetricValue.includes(metric)) {
-                setSelectedMetricValue(
-                  selectedMetricValue.filter((item) => item.id !== metric.id),
-                )
-                handleRemoveNumberOfFiltersApplied()
-              } else {
-                setSelectedMetricValue([...selectedMetricValue, metric])
-                handleSetNumberOfFiltersApplied()
-              }
-              setShowOnlySelectMatricsFromMatricList(true)
-            }}
+            onClick={() => handleMetricClick(metric)}
           >
             <div className="flex items-center space-x-2">
               <span className="text-sm">{metric.lable}</span>
@@ -86,7 +127,7 @@ const MetricsTab: React.FC<Props> = ({
                     <button
                       onClick={() => {
                         if (numberOfFiltersApplied > 1) {
-                          handleRemoveNumberOfFiltersApplied()
+                          handleRemoveMetric(item.id)
                         } else {
                           handleResetNumberOfFiltersApplied()
                         }
@@ -98,7 +139,7 @@ const MetricsTab: React.FC<Props> = ({
                   </div>
                 </div>
                 <div
-                  key={item.id}
+                  key={`${item.id}-condition`}
                   className="flex items-center justify-between text-gray-900 p-2 rounded-xl text-sm gap-2"
                 >
                   <FormControl
@@ -108,6 +149,13 @@ const MetricsTab: React.FC<Props> = ({
                   >
                     <Select
                       defaultValue={matricListCondition[0].id}
+                      value={item.matricListCondition?.id || ''}
+                      onChange={(e) =>
+                        handleSelectMetricCondition(
+                          item.id,
+                          Number(e.target.value),
+                        )
+                      }
                       className="bg-white rounded-md hover:bg-gray-300"
                       sx={{
                         '& .MuiSelect-select': {
@@ -131,6 +179,9 @@ const MetricsTab: React.FC<Props> = ({
                     size="small"
                     placeholder="Value"
                     variant="outlined"
+                    onChange={(e) =>
+                      handleSetMetricValue(item.id, Number(e.target.value))
+                    }
                     className="rounded-md hover:border-lime-200 transition-colors"
                     sx={{
                       '& .MuiOutlinedInput-root': {
@@ -143,9 +194,9 @@ const MetricsTab: React.FC<Props> = ({
                   />
                 </div>
               </div>
-              <div className="flex justify-center items-center p-2 rounded-xl text-sm gap-2">
+              {/* {selectedMetricValue.length > 1 && (
                 <ToggleButtonWithSmoothTransition />
-              </div>
+              )} */}
             </>
           ))}
           <div>
@@ -161,6 +212,7 @@ const MetricsTab: React.FC<Props> = ({
                 setShowOnlySelectMatricsFromMatricList(false)
                 filterReportsListBasedOnSelectedMetricAndConditions(
                   selectedMetricValue,
+                  reportsList,
                 )
               }}
             >
