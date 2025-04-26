@@ -12,7 +12,11 @@ import { useStore } from '@tanstack/react-store'
 import DimensionsTab from './Tabs/DimensionsTab'
 import TagsTab from './Tabs/TagsTab'
 import MetricsTab from './Tabs/MetricsTab'
-import { processTagListForFiltering } from '@/utils/lib'
+import {
+  processDimensionListForFiltering,
+  processMetricListForFiltering,
+  processTagListForFiltering,
+} from '@/utils/lib'
 
 interface Props {}
 
@@ -31,13 +35,13 @@ const FilterTabControl: React.FC<Props> = () => {
     { id: 5, lable: 'Ad Group', key: 'ad_group' },
   ]
 
-  const [selectedDimensionValue, setSelectedDimensionValue] = React.useState<
+  const [selectedDimensionList, setSelectedDimensionList] = React.useState<
     {
       id: number
       lable: string
       key: string
     }[]
-  >()
+  >([])
 
   const [
     showOnlySelectDimensionFromDimensionList,
@@ -45,7 +49,7 @@ const FilterTabControl: React.FC<Props> = () => {
   ] = React.useState<boolean>(false)
 
   const TagsList: { id: number; lable: string; key: string }[] = [
-    { id: 1, lable: 'Character', key: 'Concept' },
+    { id: 1, lable: 'Character', key: 'Character' },
     { id: 2, lable: 'Background', key: 'Background' },
     { id: 3, lable: 'Elements', key: 'Objects' },
     { id: 4, lable: 'CTA Text', key: 'CTA_Text' },
@@ -122,13 +126,23 @@ const FilterTabControl: React.FC<Props> = () => {
 
         <CustomTabPanel value={value} index={0}>
           <DimensionsTab
+            characterList={processDimensionListForFiltering()}
             dimensionsList={DimensionsList}
+            dimensionsListCondition={tagListCondition}
             numberOfFiltersApplied={numberOfFiltersApplied}
-            selectedDimensionValue={[]}
+            selectedDimensionList={selectedDimensionList}
             setNumberOfFiltersApplied={function (value: number): void {
               handleUpdateNumberOfFiltersApplied(value)
             }}
-            // setSelectedDimensionValue={() => {}}
+            setSelectedDimensionList={function (
+              value: {
+                id: number
+                lable: string
+                key: string
+              }[],
+            ): void {
+              setSelectedDimensionList(value)
+            }}
             handleRemoveNumberOfFiltersApplied={
               handleRemoveNumberOfFiltersApplied
             }
@@ -136,7 +150,9 @@ const FilterTabControl: React.FC<Props> = () => {
               handleResetNumberOfFiltersApplied
             }
             handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
-            showOnlySelectDimensionFromDimensionList={false}
+            showOnlySelectDimensionFromDimensionList={
+              showOnlySelectDimensionFromDimensionList
+            }
             setShowOnlySelectDimensionFromDimensionList={function (
               value: boolean,
             ): void {
@@ -170,6 +186,7 @@ const FilterTabControl: React.FC<Props> = () => {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           <MetricsTab
+            characterList={processMetricListForFiltering()}
             metricsList={metricsList}
             selectedMetricValue={selectedMetricValue}
             setSelectedMetricValue={setSelectedMetricValue}

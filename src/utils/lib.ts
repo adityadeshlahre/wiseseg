@@ -86,8 +86,169 @@ export const processTagListForFiltering = (): {
   return characterList
 }
 
+export const processDimensionListForFiltering = (): {
+  country: { id: number; lable: string; key: string }[]
+  ad_network: { id: number; lable: string; key: string }[]
+  os: { id: number; lable: string; key: string }[]
+  campaign: { id: number; lable: string; key: string }[]
+  ad_group: { id: number; lable: string; key: string }[]
+} => {
+  const { reportsList } = useStore(dataStore)
+
+  const uniqueDimensions = {
+    country: new Set<string>(),
+    ad_network: new Set<string>(),
+    os: new Set<string>(),
+    campaign: new Set<string>(),
+    ad_group: new Set<string>(),
+  }
+
+  reportsList.forEach((item) => {
+    if (item.country) {
+      uniqueDimensions.country.add(item.country)
+    }
+    if (item.ad_network) {
+      uniqueDimensions.ad_network.add(item.ad_network)
+    }
+    if (item.os) {
+      uniqueDimensions.os.add(item.os)
+    }
+    if (item.campaign) {
+      uniqueDimensions.campaign.add(item.campaign)
+    }
+    if (item.ad_group) {
+      uniqueDimensions.ad_group.add(item.ad_group)
+    }
+  })
+
+  const dimensionList = {
+    country: [
+      { id: 0, lable: 'Select all', key: 'country' },
+      ...Array.from(uniqueDimensions.country).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        key: 'country',
+      })),
+    ],
+    ad_network: [
+      { id: 0, lable: 'Select all', key: 'ad_network' },
+      ...Array.from(uniqueDimensions.ad_network).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        key: 'ad_network',
+      })),
+    ],
+    os: [
+      { id: 0, lable: 'Select all', key: 'os' },
+      ...Array.from(uniqueDimensions.os).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        key: 'os',
+      })),
+    ],
+    campaign: [
+      { id: 0, lable: 'Select all', key: 'campaign' },
+      ...Array.from(uniqueDimensions.campaign).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        key: 'campaign',
+      })),
+    ],
+    ad_group: [
+      { id: 0, lable: 'Select all', key: 'ad_group' },
+      ...Array.from(uniqueDimensions.ad_group).map((val, index) => ({
+        id: index + 1,
+        lable: val,
+        key: 'ad_group',
+      })),
+    ],
+  }
+
+  return dimensionList
+}
+
+export const processMetricListForFiltering = (): {
+  ipm: { id: number; lable: string; key: string }[]
+  ctr: { id: number; lable: string; key: string }[]
+  spend: { id: number; lable: string; key: string }[]
+  clicks: { id: number; lable: string; key: string }[]
+  cpm: { id: number; lable: string; key: string }[]
+} => {
+  const { reportsList } = useStore(dataStore)
+
+  const uniqueMetrics = {
+    ipm: new Set<number>(),
+    ctr: new Set<number>(),
+    spend: new Set<number>(),
+    clicks: new Set<number>(),
+    cpm: new Set<number>(),
+  }
+
+  reportsList.forEach((item) => {
+    if (item.ipm) {
+      uniqueMetrics.ipm.add(item.ipm)
+    }
+    if (item.ctr) {
+      uniqueMetrics.ctr.add(item.ctr)
+    }
+    if (item.spend) {
+      uniqueMetrics.spend.add(item.spend)
+    }
+    if (item.clicks) {
+      uniqueMetrics.clicks.add(item.clicks)
+    }
+    if (item.cpm) {
+      uniqueMetrics.cpm.add(item.cpm)
+    }
+  })
+
+  const metricsList = {
+    ipm: [
+      { id: 0, lable: 'Select all', key: 'ipm' },
+      ...Array.from(uniqueMetrics.ipm).map((val, index) => ({
+        id: index + 1,
+        lable: val.toString(),
+        key: 'ipm',
+      })),
+    ],
+    ctr: [
+      { id: 0, lable: 'Select all', key: 'ctr' },
+      ...Array.from(uniqueMetrics.ctr).map((val, index) => ({
+        id: index + 1,
+        lable: val.toString(),
+        key: 'ctr',
+      })),
+    ],
+    spend: [
+      { id: 0, lable: 'Select all', key: 'spend' },
+      ...Array.from(uniqueMetrics.spend).map((val, index) => ({
+        id: index + 1,
+        lable: val.toString(),
+        key: 'spend',
+      })),
+    ],
+    clicks: [
+      { id: 0, lable: 'Select all', key: 'clicks' },
+      ...Array.from(uniqueMetrics.clicks).map((val, index) => ({
+        id: index + 1,
+        lable: val.toString(),
+        key: 'clicks',
+      })),
+    ],
+    cpm: [
+      { id: 0, lable: 'Select all', key: 'cpm' },
+      ...Array.from(uniqueMetrics.cpm).map((val, index) => ({
+        id: index + 1,
+        lable: val.toString(),
+        key: 'cpm',
+      })),
+    ],
+  }
+
+  return metricsList
+}
+
 export const filterReportsListBasedOnSelectedTags = (
-  // this should be added on apply button
   selectedTags: {
     id: number
     lable: string
@@ -150,3 +311,41 @@ export const filterReportsListBasedOnSelectedMetricAndConditions = (
 }
 
 // dimensions
+
+export const filterReportsListBasedOnSelectedDimensionAndConditions = (
+  selectedDimensionValue: {
+    id: number
+    lable: string
+    key: string
+  }[],
+  reportsList: ReportList,
+): ReportList => {
+  const filteredList = reportsList.filter((item) => {
+    return selectedDimensionValue.every((selectedDimension) => {
+      const dimensionValue = (item as any)[selectedDimension.key]
+
+      if (dimensionValue === undefined || dimensionValue === null) {
+        return false
+      }
+
+      const condition = selectedDimension.lable
+
+      switch (condition) {
+        case 'Contains':
+          return dimensionValue.includes(selectedDimension.id.toString())
+        case 'Does not contain':
+          return !dimensionValue.includes(selectedDimension.id.toString())
+        case 'is':
+          return dimensionValue === selectedDimension.id.toString()
+        case 'is not':
+          return dimensionValue !== selectedDimension.id.toString()
+        default:
+          return false
+      }
+    })
+  })
+
+  handleSetReportsList(filteredList)
+
+  return filteredList
+}
