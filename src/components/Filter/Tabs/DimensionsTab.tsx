@@ -14,6 +14,7 @@ import Dropdown from '@/svgs/Dropdown'
 import { dataStore } from '@/store/store'
 import { useStore } from '@tanstack/react-store'
 import ToggleButtonWithSmoothTransition from '../Toggle/ToggleButton'
+import { filterReportsListBasedOnSelectedDimensionAndConditions } from '@/utils/lib'
 
 interface Props {
   characterList: {
@@ -279,6 +280,10 @@ const DimensionsTab: React.FC<Props> = ({
               }}
               onClick={() => {
                 setShowOnlySelectDimensionFromDimensionList(false)
+                filterReportsListBasedOnSelectedDimensionAndConditions(
+                  selectedDimensionList,
+                  reportsList,
+                )
               }}
             >
               Apply <KeyboardReturnIcon />
@@ -291,7 +296,3 @@ const DimensionsTab: React.FC<Props> = ({
 }
 
 export default DimensionsTab
-
-{
-  /* {selectedTagList.length > 1 && <ToggleButtonWithSmoothTransition />} */
-}

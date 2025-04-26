@@ -293,7 +293,3 @@ const MetricsTab: React.FC<Props> = ({
 }
 
 export default MetricsTab
-
-{
-  /* {selectedMetricValue.length > 1 && ( <ToggleButtonWithSmoothTransition /> )} */
-}
