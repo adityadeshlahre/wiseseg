@@ -50,8 +50,12 @@ const FilterTabControl: React.FC<Props> = () => {
   ]
 
   const [selectedDimensionValue, setSelectedDimensionValue] = React.useState<
-    { id: number; lable: string; key: string }[]
-  >([])
+    {
+      id: number
+      lable: string
+      key: string
+    }[]
+  >()
 
   const [
     showOnlySelectDimensionFromDimensionList,
@@ -137,6 +141,12 @@ const FilterTabControl: React.FC<Props> = () => {
         <CustomTabPanel value={value} index={0}>
           <DimensionsTab
             dimensionsList={DimensionsList}
+            numberOfFiltersApplied={numberOfFiltersApplied}
+            selectedDimensionValue={[]}
+            setNumberOfFiltersApplied={function (value: number): void {
+              throw new Error('Function not implemented.')
+            }}
+            // setSelectedDimensionValue={() => {}}
             // handleRemoveNumberOfFiltersApplied={
             //   handleRemoveNumberOfFiltersApplied
             // }
@@ -144,8 +154,6 @@ const FilterTabControl: React.FC<Props> = () => {
             //   handleResetNumberOfFiltersApplied
             // }
             // handleSetNumberOfFiltersApplied={handleSetNumberOfFiltersApplied}
-            // selectedDimensionValue={''}
-            // setSelectedDimensionValue={() => {}}
             // showOnlySelectDimensionFromDimensionList={false}
             // setShowOnlySelectDimensionFromDimensionList={() => {}}
           />
